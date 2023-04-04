@@ -16,4 +16,4 @@ cs 파일은 프로젝트에 사용된 scripts이고 tester.py는 게임에서 �
 
 
 ### 플레이 영상
-![NanaCandy Play Video](https://user-images.githubusercontent.com/62535139/229797324-123667ea-7151-425b-b55a-e211ff3b0865.gif)
+![NanaCandy Playing Video](https://user-images.githubusercontent.com/62535139/229797755-287615ea-a82a-4802-8aa7-3b9f31e14a51.gif)
