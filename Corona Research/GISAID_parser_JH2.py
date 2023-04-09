@@ -16,14 +16,13 @@ import subprocess
 chrome_options= webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
-#chrome_options.add_argument("--remote_debugging-port=9222")
+chrome_options.add_argument("--remote_debugging-port=9222")
 chrome_options.add_argument('--disable-dev-shm-usage')
 df = pd.read_excel("gisaid_cov2020_acknowledgement_table.xls", header=3)
 id_list=df.iloc[:,0]
-#os.chdir('/home/public/DATA/GISAID/fasta')
-#log_file = open('/home/jhbae/log_file.txt','w')
-#file_list = os.listdir('/home/public/DATA/GISAID/fasta/')    #list about already downloaded
-file_list=[]
+os.chdir('******')
+log_file = open('******','w')
+file_list = os.listdir('******')    #list about already downloaded
 whole = len(id_list)-len(file_list)
 current = 0
 alarm = 0
@@ -36,7 +35,7 @@ def Time_now():
     
 def Mes(text):
     text = Time_now()+text
-    #log_file.write(text+'\n')
+    log_file.write(text+'\n')
     print(text+'\n')
 
 def Search(driver,accession):
@@ -103,9 +102,9 @@ def Search(driver,accession):
             meta[txt.text]=td[1].text
         except:
             pass
-    #f=open('/home/public/DATA/GISAID/meta/'+accession+'.txt','w')
-    #f.write(json.dumps(meta, indent=4))
-    #f.close()
+    f=open('******'+accession+'.txt','w')
+    f.write(json.dumps(meta, indent=4))
+    f.close()
     
     driver.back() #back
     return 'Success'
@@ -116,8 +115,8 @@ def Main():
         Mes('Zzz..')
         sleep(300)
         fail=0
-    driver = webdriver.Chrome(executable_path="C:\chromedriver_win32/chromedriver.exe") #for laptop
-    #driver = webdriver.Chrome(chrome_options=chrome_options)   #for server
+    #driver = webdriver.Chrome(executable_path="******") #for laptop
+    driver = webdriver.Chrome(chrome_options=chrome_options)   #for server
     driver.get("https://www.gisaid.org/")
     Mes('Open')
     sleep(3)
@@ -134,46 +133,18 @@ def Main():
         a+=1    #make error to restart
     
     sleep(3)
-    '''
-    sec, limit_sec = 0, 60
-    while True:
-        sec+=1
-        sleep(1)
-        try:
-            elem = driver.find_element_by_id("elogin")
-            elem.clear()
-            elem.send_keys("wan101010")    #Type ID
-            sleep(1)
-            elem = driver.find_element_by_name("password")
-            elem.clear()
-            elem.send_keys("corona2019project")  #Type Password
-            sleep(3)
-            driver.find_element_by_class_name("form_button_submit").click()
-            sleep(5)
-            Mes('Log in')
-        except:
-            try:
-                driver.find_element_by_xpath("/html/body/form/div[5]/div/div[1]/div/div/div/div/div[2]/div/ul/li[3]/a").click()
-                break
-            except:
-                pass
-        if sec+1 > limit_sec:
-            Mes('login error')
-            driver.quit()
-            Restart()
-            return
-    '''        
+    
     try:    #login
         elem = wait(driver, 20).until(
             EC.presence_of_element_located((By.ID,'elogin'))
             )
         sleep(1)
         elem.clear()
-        elem.send_keys("wan101010")    #Type ID
+        elem.send_keys("******")    #Type ID
         sleep(1)
         elem = driver.find_element_by_name("password")
         elem.clear()
-        elem.send_keys("corona2019project")    #Type password
+        elem.send_keys("******")    #Type password
         
         sleep(5)
         elem = wait(driver, 5).until(
@@ -217,17 +188,12 @@ def Main():
         a+=1    #make error to restart
     fail=0
     Mes('Start to search')
-    '''
-    f=open('/home/public/DATA/GISAID/List.txt','r')
-    file_list=f.readlines()    #list about already downloaded
-    f.close()
-    '''
     
     error=[]    #list for error case
     
     global whole, current, alarm
 
-    #f=open('/home/public/DATA/GISAID/List.txt','a')
+    f=open('******','a')
     
     CMD = "wall Start to search on GISAID parsing"
     out = subprocess.check_output(CMD,shell=True)
@@ -239,7 +205,7 @@ def Main():
                 a+=1    #make error to restart
             
             elif result == 'Success':    #Success
-                #f.write(i+'\n')
+                f.write(i+'\n')
                 Mes(i+' success')
                 current+=1
                 percent = current/whole*100
@@ -264,7 +230,7 @@ def Main():
                 a+=1    #make error to restart
             
             elif result == 'Success':    #Success
-                #f.write(i+'\n')
+                f.write(i+'\n')
                 error.remove(i)
                 Mes(i+' success')
                 current+=1
@@ -279,10 +245,10 @@ def Main():
                 Mes(i+' re-error')
                 return
                 
-    #f.close()
+    f.close()
     driver.quit()
     Mes('end')
-    #log_file.close()
+    log_file.close()
 
 while True:
     try:
@@ -291,5 +257,5 @@ while True:
     except:
         Mes('Restart')
 
-#CMD = "wall Finished GISAID parsing"
-#out = subprocess.check_output(CMD,shell=True)
+CMD = "wall Finished GISAID parsing"
+out = subprocess.check_output(CMD,shell=True)
